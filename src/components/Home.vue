@@ -21,7 +21,7 @@
                 <!-- 上面两个，一定要在前面加 ： ，才能保证false为boolean值，否则只是false这个字符串 -->
                 <!-- router作用是开启路由模式：点击二级菜单直接跳转，不需要一个一个菜单去设置路由，更加方便 -->
                 <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" 
-                unique-opened :collapse='isCollapse' :collapse-transition='false' router>                  
+                unique-opened :collapse='isCollapse' :collapse-transition='false' router :default-active="activePath">                  
                     <!-- 一级菜单 -->
                     <!-- 下面一条的:index="item.id是为了让每一个一级菜单单独点开和关闭 -->
                     <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
@@ -34,7 +34,8 @@
                         </template>
 
                         <!-- 二级菜单 -->
-                        <el-menu-item :index="'/' + subItem.path + ''" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
+                        @click="saveNavState('/' + subItem.path)">
                             <!-- 图标 -->
                             <i class="el-icon-menu"></i>
                             <!-- 文本 -->
@@ -66,11 +67,15 @@ export default {
                 '102':'el-icon-tickets',
                 '145':'el-icon-s-marketing',
             },
+            //是否折叠
             isCollapse:false,
+            //被激活的链接地址
+            activePath:'',
         }
     },
     created() {//生命周期函数
         this.getMenuList()
+        this.activePath = window.sessionStorage.getItem('activePath')
     },
     methods: {
         //退出登录
@@ -90,6 +95,11 @@ export default {
         togggleCollapse() {
             this.isCollapse = !this.isCollapse
         },
+        //保存链接的激活状态
+        saveNavState(activePath) {
+            window.sessionStorage.setItem('activePath',activePath);
+            this.activePath = activePath;
+        }
     }
 }
 </script>
