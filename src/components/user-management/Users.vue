@@ -23,13 +23,40 @@
 
             <!-- 用户列表区域 -->
             <el-table :data='userlist' border stripe>
+                <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
                 <el-table-column label="电话" prop="mobile"></el-table-column>
                 <el-table-column label="角色" prop="role_name"></el-table-column>
-                <el-table-column label="状态" prop="mg_status"></el-table-column>
-                <el-table-column label="操作"></el-table-column>
+                <el-table-column label="状态">
+                    <!-- 作用域插槽 -->
+                    <!-- 通过slot-scope接收了当前作用域的数据，通过scope.row得到这一行的所有数据 -->
+                    <template slot-scope="scope">
+                        <!-- {{scope.row}} -->
+                        <el-switch v-model="scope.row.mg_state">
+                        </el-switch>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template>
+                        <!-- {{scope.row}} -->
+                        <!-- 修改按钮 -->
+                        <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+                        <!-- 删除按钮 -->
+                        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                        <!-- 分配角色按钮 -->
+                        <el-tooltip  effect="dark" content="分配角色" placement="top" :enterable='false'>
+                            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                        </el-tooltip>
+                    </template>
+                    <!-- ps:没有组件的情况下，在组件标签内的一些内容是不起作用的 -->
+                </el-table-column>
             </el-table>
+            <!-- 分页区域 -->
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" 
+            :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 3, 4, 5, 10]" 
+            :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
         </el-card>
     </div>
 </template>
@@ -41,11 +68,13 @@ export default {
             //获取用户列表的参数对象
             queryInfo: {
                 query: '',
+                //当前的页数
                 pagenum: 1,
-                pagesize: 2,
+                //当前每页显示多少条数据//黑马接口里总共就4条数据
+                pagesize:4,
             },
-            userlist: [],
-            total: 0,
+            userlist: [],//用户列表
+            total: 0,//总数据条数
         }
     },
     created() {
@@ -60,7 +89,19 @@ export default {
             this.userlist = res.data.users
             this.total = res.data.total
             console.log(res);
-        }
+        },
+        // 监听pagesize改变的事件
+        handleSizeChange(newSize){
+            // console.log(newSize);
+            this.queryInfo.pagesize = newSize;
+            this.getUserList();
+        },
+        //监听页码值改变的事件
+        handleCurrentChange(newPage){
+            // console.log(newPage);
+            this.queryInfo.pagenum = newPage;
+            this.getUserList();
+        },
     }
 }
 </script>
