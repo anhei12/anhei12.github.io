@@ -8,6 +8,13 @@ import './assets/css/global.css'
 import axios from 'axios'
 //配置请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+//通过axios请求连接器request，添加了token，保证拥有获取数据的权限，保证有权限的请求才能成功
+axios.interceptors.request.use(config => {//request请求连接器
+  // console.log(config);//测试
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  //在最好必须return config，是固定写法
+  return config
+})
 Vue.prototype.$http = axios
 
 Vue.config.productionTip = false
