@@ -19,8 +19,9 @@
                 <!-- :collapse='isCollapse'是左侧菜单的折叠与打开，动态绑定的这个isCollapse，通过点击那3个竖线，改变这个isCollapse的boolean值 -->
                 <!-- :collapse-transition='false'是左侧菜单折叠与打开时的动画，不连贯，有残留，就取false取消动画 -->
                 <!-- 上面两个，一定要在前面加 ： ，才能保证false为boolean值，否则只是false这个字符串 -->
+                <!-- router作用是开启路由模式：点击二级菜单直接跳转，不需要一个一个菜单去设置路由，更加方便 -->
                 <el-menu background-color="#333744" text-color="#fff" active-text-color="#409EFF" 
-                unique-opened :collapse='isCollapse' :collapse-transition='false'>                  
+                unique-opened :collapse='isCollapse' :collapse-transition='false' router>                  
                     <!-- 一级菜单 -->
                     <!-- 下面一条的:index="item.id是为了让每一个一级菜单单独点开和关闭 -->
                     <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
@@ -33,7 +34,7 @@
                         </template>
 
                         <!-- 二级菜单 -->
-                        <el-menu-item :index="subItem.id + ''" v-for="subItem in item.children" :key="subItem.id">
+                        <el-menu-item :index="'/' + subItem.path + ''" v-for="subItem in item.children" :key="subItem.id">
                             <!-- 图标 -->
                             <i class="el-icon-menu"></i>
                             <!-- 文本 -->
@@ -45,7 +46,8 @@
             </el-aside>
             <!-- 右侧主体区域 -->
             <el-main>
-                Main
+                <!-- 路由占位符 -->
+                <router-view></router-view>
             </el-main>
         </el-container>
     </el-container>
@@ -82,7 +84,7 @@ export default {
             const {data:res} = await this.$http.get('menus')
             if(res.meta.status !== 200) return this.$message.console.error(res.meta.msg);
             this.menulist = res.data
-            console.log(res);
+            console.log(res);//测试
         },
         //点击按钮切换菜单的折叠与展开
         togggleCollapse() {
