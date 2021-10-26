@@ -169,7 +169,7 @@ export default {
             //修改显示用户对话框的显示与隐藏
             editDialogVisible: false,
             //查询到的用户信息对象保存
-            editFrom: {
+            editForm: {
 
             }
         }
@@ -239,7 +239,7 @@ export default {
             if(res.meta.status !==200) {
                 return this.$message.error('查询用户信息失败')
             }
-            this.editFrom = res.data
+            this.editForm = res.data
             this.editDialogVisible = true
             // console.log(id);
 

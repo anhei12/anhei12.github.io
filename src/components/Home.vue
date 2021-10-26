@@ -87,9 +87,9 @@ export default {
         //获取所有的左侧菜单数据
         async getMenuList() {
             const {data:res} = await this.$http.get('menus')
-            if(res.meta.status !== 200) return this.$message.console.error(res.meta.msg);
+            if(res.meta.status !== 200) return this.$message.error(res.meta.msg);
             this.menulist = res.data
-            console.log(res);//测试
+            // console.log(res);//测试
         },
         //点击按钮切换菜单的折叠与展开
         togggleCollapse() {
