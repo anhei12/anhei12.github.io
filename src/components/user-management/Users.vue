@@ -62,7 +62,7 @@
         <!-- 添加用户的对话框 -->
         <el-dialog title="添加用户" :visible.sync="addDialogVisible" width="25%" @close="addDialogClosed">
             <!-- 内容主体区 -->
-            <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px">
+            <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" label-width="70px"> 
                 <el-form-item label="用户名" prop="username">
                     <el-input v-model="addForm.username"></el-input>
                 </el-form-item>
@@ -86,7 +86,7 @@
         <!-- 修改用户的对话框 -->
         <el-dialog title="修改用户信息" :visible.sync="editDialogVisible" width="33%" >
             <!-- 只要是验证规则，后面以Rules结尾，只要是表单的引用，后面以Ref结尾 -->
-            <el-form :model="editFrom" :rules="editFromRules" ref="editFromRef" label-width="50px">
+            <!-- <el-form :model="editFrom" :rules="editFromRules" ref="editFromRef" label-width="50px">
                 <el-form-item label="用户名">
                     <el-input :v-model="editFrom.username"></el-input>
                 </el-form-item>
@@ -96,7 +96,7 @@
                 <el-form-item label="活动名称" prop="tname">
                     <el-input v-model="ruleForm.name"></el-input>
                 </el-form-item>
-            </el-form>
+            </el-form> -->
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editDialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="editDialogVisible = false">确 定</el-button>
