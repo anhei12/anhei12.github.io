@@ -82,8 +82,8 @@ export default {
         async logout() {
             const confirmResult = await this.$confirm('此操作将退出登录, 是否继续?', '提示', //第一个字符串是内容，第二个是标题
             {
-                confirmButtonText: '确定',
                 cancelButtonText: '取消',
+                confirmButtonText: '确定',
                 type: 'warning'
             }).catch(err => err)//箭头函数里只有一行代码，所以简写
             //如果用户取消删除，则返回值为字符串 cancel
