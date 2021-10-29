@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "upload": "node upload.js",
-    "build": "node build/build.js && npm run upload"
+    "build": "vue-cli-service build"
 
   },
   "dependencies": {
