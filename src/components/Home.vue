@@ -3,8 +3,10 @@
         <!-- 头部区域 -->
         <el-header>
             <div>
-                <img src="../assets/heima.png" alt="">
-                <span>电商后台管理系统</span>
+                <!-- <img src="../assets/heima.png" alt=""> -->
+                <!-- <span>电商后台管理系统</span> -->
+                <!-- 后面会改成小说网站 -->
+                <!-- <span>猫娘的书客刺猬猫小说</span> -->
             </div>
             <el-button type="info" @click="logout">退出登录</el-button>
         </el-header>
