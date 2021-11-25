@@ -1,0 +1,28 @@
+/* 全局样式表 */
+html,body,#app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    /* 教程是1366，但我的笔记本比例很奇怪，先用1300 */
+    min-width: 1300px;
+}
+
+.el-breadcrumb {
+    margin-bottom: 15px;
+    font-size: 12px;
+}
+
+.el-card {
+    /* 卡片样式权重比较高，需要加 ！ 覆盖原本的样式上 */
+    box-shadow: 0 1px 1px rgba(0,0,0,.15) !important;
+}
+
+.el-table {
+    margin-top: 15px;
+    font-size: 12px;
+}
+
+.el-pagination {
+    margin-top: 15px;
+    text-align: center;
+}
