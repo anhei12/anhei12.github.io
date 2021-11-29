@@ -5,6 +5,10 @@
             <div>
                 <img src="../assets/heima.png" alt="">
                 <span>电商后台管理系统</span>
+                <!-- 分支cxg为编写分支 -->
+                <!-- master为主分支 -->
+                <!-- novel为之后创建的小说网站分支 -->
+                <!-- backup为master的备份分支 -->
             </div>
             <el-button type="info" @click="logout">退出登录</el-button>
         </el-header>
