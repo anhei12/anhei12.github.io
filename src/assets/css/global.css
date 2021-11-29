@@ -3,8 +3,8 @@ html,body,#app {
     height: 100%;
     margin: 0;
     padding: 0;
-    /* 教程是1366，但我的笔记本比例很奇怪，先用1300 */
-    min-width: 1300px;
+    /* 教程是1366，但我的笔记本比例很奇怪，先用1300//控制屏幕大小后，调节屏幕右边的按钮很难受，先关上 */
+    /* min-width: 1300px; */
 }
 
 .el-breadcrumb {
