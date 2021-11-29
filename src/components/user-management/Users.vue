@@ -108,12 +108,24 @@
         <!-- 分配角色的对话框 -->
         <el-dialog title="分配角色" :visible.sync="setRightDialogVisible" width="33%">
             <div>
-                <p>当前的用户:{{userInfo.username}}</p>
-                <p>当前的角色:{{userInfo.role_name}}</p>
+                <p>当前用户:{{userInfo.username}}</p>
+                <p>当前角色:{{userInfo.role_name}}</p>
+                <p>分配角色:
+                    <el-select v-model="selectedRoleId" placeholder="请选择">
+                        <el-option
+                            v-for="item in rolesList"
+                            :key="item.id"
+                            :label="item.roleName"
+                            :value="item.id">
+                        </el-option>
+                        <!-- roleName 为下拉框里显示的数据,框里显示的也是 roleName -->
+                        <!-- 但真正进入框里的数据是 :value="item.id" 中的 id,进入 selectedRoleId 中的也是这个id -->
+                    </el-select>
+                </p>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="setRightDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="setRightDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -201,6 +213,8 @@ export default {
             userInfo:{},
             //所有角色的数据列表
             rolesList: [],
+            //选中的角色id值
+            selectedRoleId: '',
         }
     },
     created() {
@@ -318,7 +332,7 @@ export default {
             this.userInfo = userInfo
 
             //在展示对话框之前，获取所有角色的列表
-            const {data:res} = await this.$http.delete('roles')
+            const {data:res} = await this.$http.get('roles')
             if(res.meta.status !== 200){
                 return this.$message.info('获取角色列表失败')
             }
@@ -326,7 +340,25 @@ export default {
             this.rolesList = res.data
 
             this.setRightDialogVisible = true
-        }
+        },
+        //点击按钮,分配角色
+        async saveRoleInfo() {
+            if(!this.selectedRoleId) {
+                return this.$message.error('请选择要分配的角色!')
+            }
+            const {data: res} = await this.$http.put(`users/${this.userInfo.id}/role`,{ rid: this.selectedRoleId })
+            if(res.meta.status !== 200){
+                this.setRightDialogVisible = false
+                this.selectedRoleId = ''
+                // this.userInfo = {}
+                return this.$message.info(res.meta.msg||'分配角色失败')
+            }
+            this.$message.success('分配用户成功')
+            this.getUserList()
+            this.setRightDialogVisible = false
+            this.selectedRoleId = ''
+            // this.userInfo = {}//视频教程里需要将这个 需要被分配角色的用户信息userInfo重置为空,但我觉得无影响啊
+        },
     }
 }
 </script>
