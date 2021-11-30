@@ -15,7 +15,7 @@
                 <el-button type="primary">警告：大伙先别删权限，貌似有bug，一删一片，人麻了已经</el-button>
             </span>
 
-            <el-table :data="roleList" border stripe>
+            <el-table :data="roleList" border stripe style="border-radius: 5px;">
                 <!-- 展开列 -->
                 <el-table-column type="expand">
                     <template slot-scope="scope">
