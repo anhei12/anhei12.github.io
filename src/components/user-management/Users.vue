@@ -1,4 +1,8 @@
 <template>
+<!-- 
+    bug待办:
+    1:当最后一页用户删除完后,页面自动刷新: getUserList() ,获取的用户列表为空,导致页面数据为空,就像没刷新一样
+ -->
     <div>
         <!-- 面包屑导航区 -->
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -22,7 +26,7 @@
             </el-row>
 
             <!-- 用户列表区域 -->
-            <el-table :data='userlist' border stripe>
+            <el-table :data='userlist' border stripe style="border-radius: 5px;">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
@@ -161,7 +165,7 @@ export default {
                 //当前的页数
                 pagenum: 1,
                 //当前每页显示多少条数据//黑马接口里总共就4条数据
-                pagesize:4,
+                pagesize:5,
             },
             userlist: [],//用户列表
             total: 0,//总数据条数
