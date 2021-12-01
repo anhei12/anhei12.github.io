@@ -28,7 +28,8 @@ import {
     Tag,
     Tree,
     Select,
-    option,
+    Option,
+    Cascader,
 } from 'element-ui'//Message为导入弹框提示组件
 
 Vue.use(Button)
@@ -57,7 +58,8 @@ Vue.use(Dialog)
 Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Select)
-Vue.use(option)
+Vue.use(Option)
+Vue.use(Cascader)
 Vue.prototype.$message = Message;//这样Message就挂载（prototype）到了Vue原型上//前一个message可以自己任意命名，但后一个Message是组件名，不能更改
 Vue.prototype.$confirm = MessageBox.confirm;
 
