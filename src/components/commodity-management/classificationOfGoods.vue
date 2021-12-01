@@ -174,7 +174,6 @@ export default {
             }
             this.cateList = res.data.result
             this.total = res.data.total
-            // console.log(this.cateList,'this.cateList');
         },
         // 监听pagesize改变的事件
         handleSizeChange(newSize){
@@ -199,13 +198,11 @@ export default {
             if(res.meta.status !== 200){
                 return this.$message.error('获取父级分类数据失败');
             }
-            console.log(res);
             this.parentCateList = res.data
         },
         //累了,歇会儿
         //选择项发送变化，触发
         parentCateChanged(){
-            console.log(this.selectedKeys,'this.selectedKeys');
             //如果 selectedKeys 数组中的length大于0，证明选中了父级分类
             if(this.selectedKeys.length>0){
                 //父级分类的id
@@ -224,7 +221,6 @@ export default {
             this.$refs.addCateFormRef.validate(async valid =>{
                 if(!valid) return
                 const {data: res} = await this.$http.post('categories',this.addCateForm)
-                console.log(this.addCateForm,'this.addCateForm');
                 if(res.meta.status !== 201){
                     return this.$message.error(res.meta.msg||'添加分类失败');
                 }
@@ -246,7 +242,6 @@ export default {
             if(res.meta.status !==200) {
                 return this.$message.error('查询用户信息失败')
             }
-            console.log(res,'res');
             this.editForm = res.data;
             this.editCateDialogVisible = true;
         },
