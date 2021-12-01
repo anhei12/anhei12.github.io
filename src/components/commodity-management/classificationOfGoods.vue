@@ -80,7 +80,7 @@
         <!-- 编辑分类对话框 -->
         <el-dialog title="编辑分类" :visible.sync="editCateDialogVisible" width="33%">
             <el-form :model="addCateForm" :rules="addCateFormRules" ref="editCateFormRef" label-width="100px"> 
-                <el-form-item label="分类名称:" prop="cat_name">
+                <el-form-item label="分类名称:">
                     <el-input v-model="editForm.cat_name"></el-input>
                 </el-form-item>
             </el-form>
