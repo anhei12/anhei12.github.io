@@ -1,4 +1,8 @@
 <template>
+<!-- 
+    bug待办:
+    1:当最后一页用户删除完后,页面自动刷新: getUserList() ,获取的用户列表为空,导致页面数据为空,就像没刷新一样
+ -->
     <div>
         <!-- 面包屑导航区 -->
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -22,7 +26,7 @@
             </el-row>
 
             <!-- 用户列表区域 -->
-            <el-table :data='userlist' border stripe>
+            <el-table :data='userlist' border stripe style="border-radius: 5px;">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column label="姓名" prop="username"></el-table-column>
                 <el-table-column label="邮箱" prop="email"></el-table-column>
@@ -46,7 +50,7 @@
                         <el-button type="danger" icon="el-icon-delete" size="mini" @click="removeUserById(scope.row.id)"></el-button>
                         <!-- 分配角色按钮 -->
                         <el-tooltip  effect="dark" content="分配角色" placement="top" :enterable='false'>
-                            <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                            <el-button type="warning" icon="el-icon-setting" size="mini" @click="setRole(scope.row)"></el-button>
                         </el-tooltip>
                     </template>
                     <!-- ps:没有组件的情况下，在组件标签内的一些内容是不起作用的 -->
@@ -104,6 +108,30 @@
                 <el-button type="primary" @click="editUserInfo">确 定</el-button>
             </span>
         </el-dialog>
+        
+        <!-- 分配角色的对话框 -->
+        <el-dialog title="分配角色" :visible.sync="setRightDialogVisible" width="33%">
+            <div>
+                <p>当前用户:{{userInfo.username}}</p>
+                <p>当前角色:{{userInfo.role_name}}</p>
+                <p>分配角色:
+                    <el-select v-model="selectedRoleId" placeholder="请选择">
+                        <el-option
+                            v-for="item in rolesList"
+                            :key="item.id"
+                            :label="item.roleName"
+                            :value="item.id">
+                        </el-option>
+                        <!-- roleName 为下拉框里显示的数据,框里显示的也是 roleName -->
+                        <!-- 但真正进入框里的数据是 :value="item.id" 中的 id,进入 selectedRoleId 中的也是这个id -->
+                    </el-select>
+                </p>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="setRightDialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -137,7 +165,7 @@ export default {
                 //当前的页数
                 pagenum: 1,
                 //当前每页显示多少条数据//黑马接口里总共就4条数据
-                pagesize:4,
+                pagesize:5,
             },
             userlist: [],//用户列表
             total: 0,//总数据条数
@@ -182,7 +210,15 @@ export default {
                     { required: true,message: '请输入手机号',trigger: 'blur'},
                     { validator:checkMobile,  trigger: 'blur'}
                 ],
-            }
+            },
+            //控制分配角色对话框的显示与隐藏
+            setRightDialogVisible:false,
+            //需要被分配角色的用户信息
+            userInfo:{},
+            //所有角色的数据列表
+            rolesList: [],
+            //选中的角色id值
+            selectedRoleId: '',
         }
     },
     created() {
@@ -196,23 +232,19 @@ export default {
             }
             this.userlist = res.data.users
             this.total = res.data.total
-            // console.log(res);
         },
         // 监听pagesize改变的事件
         handleSizeChange(newSize){
-            // console.log(newSize);
             this.queryInfo.pagesize = newSize;
             this.getUserList();
         },
         //监听页码值改变的事件
         handleCurrentChange(newPage){
-            // console.log(newPage);
             this.queryInfo.pagenum = newPage;
             this.getUserList();
         },
         //监听开关switch状态的改变
         async userStateChange(userinfo) {
-            // console.log(userinfo);
             const {data:res} =await this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)//反引号``是为了拼接一些重要参数//带 ：号开头的一般都是参数
             if(res.meta.status !== 200) {
                 userinfo.mg_state = !userinfo.mg_state
@@ -252,7 +284,6 @@ export default {
             }
             this.editForm = res.data;
             this.editDialogVisible = true;
-            // console.log(id);
         },
         //监听修改用户对话框的关闭事件
         editDialogClosed() {
@@ -290,7 +321,6 @@ export default {
             }).catch(err => err)//箭头函数里只有一行代码，所以简写
             //如果用户取消删除，则返回值为字符串 cancel
             //如果用户确认删除，则返回值为字符串 confirm
-            // console.log(confirmResult);
             if(confirmResult !== 'confirm') {
                 return this.$message.info('已取消删除')
             }
@@ -300,7 +330,39 @@ export default {
             }
             this.$message.success('删除用户成功')
             this.getUserList()
-        }
+        },
+        //展示分配角色的对话框
+        async setRole(userInfo){
+            this.userInfo = userInfo
+
+            //在展示对话框之前，获取所有角色的列表
+            const {data:res} = await this.$http.get('roles')
+            if(res.meta.status !== 200){
+                return this.$message.info('获取角色列表失败')
+            }
+
+            this.rolesList = res.data
+
+            this.setRightDialogVisible = true
+        },
+        //点击按钮,分配角色
+        async saveRoleInfo() {
+            if(!this.selectedRoleId) {
+                return this.$message.error('请选择要分配的角色!')
+            }
+            const {data: res} = await this.$http.put(`users/${this.userInfo.id}/role`,{ rid: this.selectedRoleId })
+            if(res.meta.status !== 200){
+                this.setRightDialogVisible = false
+                this.selectedRoleId = ''
+                // this.userInfo = {}
+                return this.$message.info(res.meta.msg||'分配角色失败')
+            }
+            this.$message.success('分配用户成功')
+            this.getUserList()
+            this.setRightDialogVisible = false
+            this.selectedRoleId = ''
+            // this.userInfo = {}//视频教程里需要将这个 需要被分配角色的用户信息userInfo重置为空,但我觉得无影响啊
+        },
     }
 }
 </script>

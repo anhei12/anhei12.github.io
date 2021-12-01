@@ -5,6 +5,10 @@
             <div>
                 <img src="../assets/喝吗.jpg" alt="" height="100" width="200">
                 <span>猫娘的书客刺猬猫小说</span>
+                <!-- 分支cxg为编写分支 -->
+                <!-- master为主分支 -->
+                <!-- novel为之后创建的小说网站分支 -->
+                <!-- backup为master的备份分支 -->
             </div>
             <el-button type="info" @click="logout">退出登录</el-button>
         </el-header>
@@ -88,7 +92,7 @@ export default {
             }).catch(err => err)//箭头函数里只有一行代码，所以简写
             //如果用户取消删除，则返回值为字符串 cancel
             //如果用户确认删除，则返回值为字符串 confirm
-            console.log(confirmResult);
+            // console.log(confirmResult);
              if(confirmResult !== 'confirm') {
                 return this.$message.info('已取消退出登录')
             }
