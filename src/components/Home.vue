@@ -5,10 +5,6 @@
             <div>
                 <img src="../assets/喝吗.jpg" alt="" height="100" width="200">
                 <span>猫娘的书客刺猬猫小说</span>
-                <!-- 分支cxg为编写分支 -->
-                <!-- master为主分支 -->
-                <!-- novel为之后创建的小说网站分支 -->
-                <!-- backup为master的备份分支 -->
             </div>
             <el-button type="info" @click="logout">退出登录</el-button>
         </el-header>
