@@ -3,7 +3,7 @@
         <!-- 头部区域 -->
         <el-header>
             <div>
-                <img src="../assets/喝吗.jpg" alt="" height="100" width="200">
+                <img src="../assets/hema.jpg" alt="" height="100" width="200">
                 <span>猫娘的书客刺猬猫小说</span>
             </div>
             <el-button type="info" @click="logout">退出登录</el-button>

@@ -3,10 +3,13 @@
         <div class="login_box">
             <!-- 头像区域 -->
             <div class="avater_box">
-                <img src="../assets/logo.png" alt="">
+                <img src="../assets/hema.jpg" alt="">
             </div>
             <!-- 登录表单区 -->
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+                <div class="title">
+                    <h3>猫娘的书客刺猬猫小说网站</h3>
+                </div>
                 <!-- 用户名 -->
                 <el-form-item prop="username">
                     <el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
@@ -106,6 +109,11 @@ export default {
         border-radius: 50%;
         background-color: #eee;
     }
+}
+.login_container .login_box .login_form .title {
+    margin: 50px,auto;
+    // background-color: pink;
+    text-align: center;
 }
 .login_form{
     position: absolute;
