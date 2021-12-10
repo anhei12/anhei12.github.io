@@ -8,7 +8,7 @@
             <!-- 登录表单区 -->
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
                 <div class="title">
-                    <h3>猫娘的书客刺猬猫小说网站</h3>
+                    <h3>提瓦特大陆上的休伯利安</h3>
                 </div>
                 <!-- 用户名 -->
                 <el-form-item prop="username">
