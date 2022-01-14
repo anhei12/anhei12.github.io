@@ -1,29 +1,28 @@
 <template>
-    <div class="login_container">
-        <div class="login_box">
-            <!-- 头像区域 -->
-            <div class="avater_box">
-                <img src="../assets/hema.jpg" alt="">
+    <div>
+        <div v-if="showDirectory">
+            <div>目录：</div>
+            <div v-for="(item,index) in directory" :key="index">
+                <div @click="getText(item)">{{item.id}} {{item.name}}</div>
             </div>
-            <!-- 登录表单区 -->
-            <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
-                <div class="title">
-                    <h3>提瓦特大陆上的休伯利安</h3>
-                </div>
-                <!-- 用户名 -->
-                <el-form-item prop="username">
-                    <el-input v-model="loginForm.username" prefix-icon="el-icon-user"></el-input>
-                </el-form-item>
-                <!-- 密码 -->
-                <el-form-item prop="password">
-                    <el-input v-model="loginForm.password" prefix-icon="el-icon-lock" show-password></el-input>
-                </el-form-item>
-                <!-- 按钮 -->
-                <el-form-item class="btns">
-                    <el-button type="primary" @click="login">登录</el-button>
-                     <el-button type="info" @click="loginFormRef">重置</el-button>
-                </el-form-item>
-            </el-form>
+            <div style="color:#97131b">VIP卷</div>
+            <div v-for="(item,index) in vipDirectory" :key="index">
+                <div @click="getText(item)">{{item.name}}</div>
+            </div>
+        </div>
+        <div v-if="showText">
+            <div>
+                <button @click="onText">上一章</button>
+                <button @click="retDirectory">返回目录</button>
+                <button @click="nextText">下一章</button>
+            </div>
+            <h3>{{title}}</h3>
+            <span>{{text}}</span>
+            <div>
+                <button @click="onText">上一章</button>
+                <button @click="retDirectory">返回目录</button>
+                <button @click="nextText">下一章</button>
+            </div>
         </div>
     </div>
 </template>
@@ -32,98 +31,72 @@
 export default {
     data(){
         return {
-           //登录表单的数据绑定对象
-           loginForm: {
-               username:'admin',
-               password:'123456',//先用正确的，方便写代码
-           },
-           //表单的验证规则
-           loginFormRules: {
-               //验证用户名是否合法
-               username: [
-                    { required: true, message: '请输入登陆用户名', trigger: 'blur' },
-                    { min: 3, max: 6, message: '长度在 3 到 6 个字符', trigger: 'blur' }
-               ],
-               //验证密码是否合法
-               password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 6, max: 16, message: '长度在 6 到 16 个字符', trigger: 'blur' }
-               ]
-           }
+            title:'',//章节名
+            text:'',//正文
+            directory:[],//目录
+            vipDirectory:[],
+            page:'directory',
+            showDirectory:true,
+            showText:false,
+            number:'',//当前章id
         }
     },
+    created(){
+        this.$http({
+            url:'shuapi.jiaston.com/book/3143/',
+            methods:'GET'
+        }).then((res) =>{
+            this.novel = res.data
+            var obj2 = eval("("+this.novel+")");  
+            console.log(obj2.data.list[2],'directory'); 
+            this.directory = obj2.data.list[1].list
+            this.vipDirectory = obj2.data.list[2].list
+        })
+    },
     methods: {
-        //点击重置按钮,重置登录表单
-        loginFormRef() {
-            // console.log(this);//测试是否成功拿到表单实例对象
-            this.$refs.loginFormRef.resetFields();
+        getText(item){
+            // console.log(item,'item');
+            this.number = item.id,
+            this.$http({
+                url:`shuapi.jiaston.com/book/3143/${item.id}.html`,
+                methods:'GET'
+            }).then((res) =>{
+                console.log(res.data.data,'res');
+                this.title = res.data.data.cname;
+                this.text = res.data.data.content;
+                // this.$router.replace('/text');
+                this.showDirectory = false;
+                this.showText = true;
+                // console.log(this.showDirectory,'this.showDirectory');
+            })
         },
-        login() {
-            this.$refs.loginFormRef.validate(async valid => {
-                // console.log(valid);测试表单验证
-                if(!valid) return;//表单验证，符合规范的用户名密码才能进行下一步
-                const {data:res} = await this.$http.post('login',this.loginForm);
-                if(res.meta.status !== 200) return this.$message.error('登陆失败！');//验证服务器返回响应码，200才是成功
-                this.$message.success('登陆成功！');
-                //1. 将登录之后的token，保存到客户端的sessionStorage中
-                //   1.1 项目中除了登录之外的其他API接口，都必须在登录之后才能访问
-                //   1.2 token只应在当前网站打开期间生效，所以token保存在sessionStorage中
-                window.sessionStorage.setItem('token',res.data.token);
-                //2，通过编程式导航跳转到后台主页，路由地址是/home
-                this.$router.push('/home');
-            });
+        retDirectory() {
+            this.showDirectory = true;
+            this.showText = false;
+        },
+        onText(){
+            this.number-=1
+            this.$http({
+                url:`shuapi.jiaston.com/book/3143/${this.number-1}.html`,
+                methods:'GET'
+            }).then((res) =>{
+                this.text = res.data.data.content;
+            })
+        },
+        nextText(){
+            this.number+=1
+            this.$http({
+                url:`shuapi.jiaston.com/book/3143/${this.number}.html`,
+                methods:'GET'
+            }).then((res) =>{
+                console.log();
+                this.text = res.data.data.content;
+            })
         }
     }
 }
 </script>
 
 <style lang="less" scoped>//支持less语法格式//scoped表示只在当前组件内生效，删除则全局生效//一般只要是单文件组件，为了不影响别人，都要加上scoped
-.login_container {
-    background-color: #2b4b6b;
-    height: 100%;
-}
-.login_box {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%);
-    width: 450px;
-    height: 300px;
-    background-color: #fff;
-    border-radius: 3px;
-}
-.avater_box{
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    // background-color: #fff;//这种镂空还蛮好看的
-    height: 130px;
-    width: 130px;
-    border: 1px solid #eee;
-    border-radius: 50%;
-    padding: 10px;
-    box-shadow: 0 0 10px #ddd;
-    img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background-color: #eee;
-    }
-}
-.login_container .login_box .login_form .title {
-    margin: 50px,auto;
-    // background-color: pink;
-    text-align: center;
-}
-.login_form{
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-.btns {
-    display: flex;//弹性盒模型
-    justify-content: flex-end;//尾部对齐
-}
+
 </style>

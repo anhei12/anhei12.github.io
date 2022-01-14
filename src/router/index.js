@@ -52,7 +52,8 @@ const router = new VueRouter({
         //数据统计
         {path:'/reports',component: dataReport },//数据报表
       ]//在home中定向了一个子路由规则
-    }
+    },
+    // {path:'/text',component:text}
   ]
 })
 
