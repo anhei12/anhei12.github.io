@@ -43,25 +43,31 @@ export default {
     },
     created(){
         this.$http({
-            url:'shuapi.jiaston.com/book/3143/',
+            url:'shuapi.jiaston.com/book/14287/',//14287    //斗破苍穹  3143
+            // https://sou.jiaston.com/search.aspx?key=斗破苍穹&page=1&siteid=app2
+            // url:'sou.jiaston.com/search.aspx?key=斗破苍穹&page=1&siteid=app2/',
             methods:'GET'
         }).then((res) =>{
+            console.log(res,'resssssssssssssssssssssss');
             this.novel = res.data
+            // console.log(this.novel,'this.novellllllllllllllllllllllllllll');
             var obj2 = eval("("+this.novel+")");  
-            console.log(obj2.data.list[2],'directory'); 
-            this.directory = obj2.data.list[1].list
-            this.vipDirectory = obj2.data.list[2].list
+            // console.log(obj2.data,'obj22222222222222222222222222222');
+            console.log(obj2.data.list[0].list,'directory'); 
+            this.directory = obj2.data.list[0].list
+            // this.vipDirectory = obj2.data.list[2].list
         })
     },
     methods: {
         getText(item){
-            // console.log(item,'item');
+            console.log(item,'item');
             this.number = item.id,
             this.$http({
-                url:`shuapi.jiaston.com/book/3143/${item.id}.html`,
+                url:`shuapi.jiaston.com/book/14287/${item.id}.html`,
                 methods:'GET'
             }).then((res) =>{
-                console.log(res.data.data,'res');
+                console.log(res,'resssssssssssssssssssssssssss');
+                console.log(res.data,'res');
                 this.title = res.data.data.cname;
                 this.text = res.data.data.content;
                 // this.$router.replace('/text');
