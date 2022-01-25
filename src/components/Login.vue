@@ -81,7 +81,7 @@ export default {
             this.showText = false;
         },
         onText(){
-            this.number-=1
+            this.number-=1 
             this.$http({
                 url:`shuapi.jiaston.com/book/3143/${this.number-1}.html`,
                 methods:'GET'
