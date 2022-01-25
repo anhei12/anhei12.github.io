@@ -62,7 +62,7 @@ export default {
         getText(item){
             console.log(item,'item');
             this.number = item.id,
-            this.$http({
+            this.$http({ 
                 url:`shuapi.jiaston.com/book/14287/${item.id}.html`,
                 methods:'GET'
             }).then((res) =>{
